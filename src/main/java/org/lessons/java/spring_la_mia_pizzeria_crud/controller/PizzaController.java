@@ -1,11 +1,12 @@
 package org.lessons.java.spring_la_mia_pizzeria_crud.controller;
 
+// imports
 import java.util.List;
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Pizza;
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.SpecialOffer;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
-import org.lessons.java.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.SpecialOfferRepository;
+import org.lessons.java.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +24,7 @@ import jakarta.validation.Valid;
 public class PizzaController {
 
     @Autowired
-    private PizzaRepository repository;
+    private PizzaService pizzaService;
 
     @Autowired
     private SpecialOfferRepository specialOfferRepository;
@@ -33,21 +34,21 @@ public class PizzaController {
 
     @GetMapping
     public String index(Model model) {
-        List<Pizza> pizzas = repository.findAll();
+        List<Pizza> pizzas = pizzaService.findAll();
         model.addAttribute("pizzas", pizzas);
         return "pizzas/index";
     }
 
     @GetMapping("/{id}")
     public String show(Model model, @PathVariable Integer id) {
-        Pizza pizza = repository.findById(id).get();
+        Pizza pizza = pizzaService.getById(id);
         model.addAttribute("pizza", pizza);
         return "pizzas/show";
     }
 
     @GetMapping("/search-by-name")
     public String searchByName(@RequestParam(name = "name") String name, Model model) {
-        List<Pizza> pizzas = repository.findByNameContaining(name);
+        List<Pizza> pizzas = pizzaService.findByName(name);
         model.addAttribute("pizzas", pizzas);
         return "pizzas/index";
     }
@@ -65,14 +66,14 @@ public class PizzaController {
             model.addAttribute("ingredients", ingredientRepository.findAll());
             return "pizzas/create";
         } else {
-            repository.save(formPizza);
+            pizzaService.create(formPizza);
             return "redirect:/pizzas";
         }
     }
 
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Integer id) {
-        model.addAttribute("pizza", repository.findById(id).get());
+        model.addAttribute("pizza", pizzaService.getById(id));
         model.addAttribute("ingredients", ingredientRepository.findAll());
 
         return "pizzas/edit";
@@ -88,7 +89,7 @@ public class PizzaController {
         if (bindingResult.hasErrors()) {
             return "/pizzas/edit";
         } else {
-            repository.save(formPizza);
+            pizzaService.update(formPizza);
             return "redirect:/pizzas/{id}";
         }
     }
@@ -96,20 +97,20 @@ public class PizzaController {
     // pizza delete
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
-        Pizza pizzaToDelete = repository.findById(id).get();
+        Pizza pizzaToDelete = pizzaService.getById(id);
         for (SpecialOffer specialOffer : pizzaToDelete.getSpecialOffers()) {
             specialOfferRepository.delete(specialOffer);
         }
-        repository.delete(pizzaToDelete);
+        pizzaService.delete(pizzaToDelete);
         return "redirect:/pizzas";
     }
 
     @GetMapping("/{id}/special-offers/create")
     public String createOffer(@PathVariable Integer id, Model model) {
         SpecialOffer specialOffer = new SpecialOffer();
-        specialOffer.setPizza(repository.findById(id).get());
+        specialOffer.setPizza(pizzaService.getById(id));
         model.addAttribute("specialOffer", specialOffer);
-        model.addAttribute("pizza", repository.findById(id).get());
+        model.addAttribute("pizza", pizzaService.getById(id));
 
         return "special-offers/create";
     }
