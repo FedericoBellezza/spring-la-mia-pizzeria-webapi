@@ -24,7 +24,7 @@ public class Ingredient {
     private String name;
 
     @ManyToMany(mappedBy = "ingredients")
-    // @JsonBackReference
+    @JsonBackReference
     public List<Pizza> pizzas;
 
     public Integer getId() {

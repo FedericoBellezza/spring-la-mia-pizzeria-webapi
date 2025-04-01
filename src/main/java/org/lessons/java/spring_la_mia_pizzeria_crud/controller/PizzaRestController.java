@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Pizza;
+import org.lessons.java.spring_la_mia_pizzeria_crud.model.SpecialOffer;
+import org.lessons.java.spring_la_mia_pizzeria_crud.repository.SpecialOfferRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,9 @@ public class PizzaRestController {
 
     @Autowired
     private PizzaService pizzaService;
+
+    @Autowired
+    private SpecialOfferRepository specialOfferRepository;
 
     @GetMapping
     public List<Pizza> index() {
@@ -60,6 +65,24 @@ public class PizzaRestController {
 
         pizzaService.update(pizza);
         return new ResponseEntity<Pizza>(pizzaToFind.get(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Pizza> delete(@PathVariable Integer id) {
+
+        // gestisco il not_found
+        Optional<Pizza> pizzaToFind = pizzaService.findById(id);
+        if (pizzaToFind.isEmpty()) {
+            return new ResponseEntity<Pizza>(HttpStatus.NOT_FOUND);
+        }
+
+        // elimino tutte le offerte associate alla pizza
+        for (SpecialOffer specialOffer : pizzaToFind.get().getSpecialOffers()) {
+            specialOfferRepository.delete(specialOffer);
+        }
+
+        pizzaService.delete(pizzaToFind.get());
+        return new ResponseEntity<Pizza>(HttpStatus.OK);
     }
 
 }
