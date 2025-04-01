@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIZZAS</title>
+    <div th:replace="~{ fragments/fragments :: favicon}"></div>
+    <div th:replace="~{ fragments/fragments :: tailwind}"></div>
+  </head>
+  <body class="mb-30">
+    <div th:replace="~{ fragments/fragments :: navbar }"></div>
+    <h1 class="text-5xl text-slate-700 font-bold italic text-center pt-10 pb-5">
+      Le nostre PIZZE
+    </h1>
+    <form class="text-center my-5" method="get" action="/pizzas/search-by-name">
+      <input
+        class="border px-2 py-1 w-100"
+        placeholder="Filtra per nome"
+        type="text"
+        id="name"
+        name="name"
+      />
+      <button
+        class="bg-red-500 px-4 py-1 my-5 text-white cursor-pointer hover:bg-red-600"
+        type="submit"
+      >
+        Filtra
+      </button>
+      <button
+        onclick="window.location.href='/pizzas/create'"
+        type="button"
+        href="/pizzas/create"
+        class="bg-blue-500 px-2 py-1 text-white text-center w-50 cursor-pointer hover:bg-blue-600"
+      >
+        Aggiungi pizza
+      </button>
+    </form>
+    <div class="text-center mb-10"></div>
+    <table
+      class="w-70/100 mx-auto text-center table-auto bg-white text-slate-700"
+    >
+      <thead class="border text-2xl italic h-20 underline">
+        <th>Nome</th>
+        <th>Ingredienti</th>
+        <th class="px-10">Prezzo</th>
+        <th class="px-10">Immagine</th>
+      </thead>
+      <tbody class="border text-2xl">
+        <tr
+          th:onclick="|window.location.href='/pizzas/' + ${pizza.id}|"
+          class="hover:bg-slate-200 border cursor-pointer"
+          th:each="pizza : ${pizzas}"
+        >
+          <td class="font-bold">[[${pizza.name}]]</td>
+          <td class="italic text-xl" th:text="${pizza.ingredients}"></td>
+          <td>€ [[${pizza.price}]].00</td>
+          <td>
+            <div class="flex justify-center">
+              <img
+                class="w-20 aspect-square rounded-xl m-3 object-cover"
+                th:src="@{${pizza.image}}"
+                alt="Immagine pizza"
+              />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

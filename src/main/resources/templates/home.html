@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOME</title>
+    <div th:replace="~{ fragments/fragments :: tailwind}"></div>
+    <div th:replace="~{ fragments/fragments :: favicon}"></div>
+  </head>
+  <body>
+    <header>
+      <div th:replace="~{ fragments/fragments :: navbar}"></div>
+    </header>
+    <main>
+      <h1 class="text-center text-6xl font-bold py-15 text-slate-700 italic">
+        Pizzeria Bella
+      </h1>
+      <div class="flex justify-center gap-5">
+        <a
+          class="bg-red-500 text-white px-3 py-2 font-bold z-1 hover:bg-red-600"
+          href="/"
+          >Prenota un tavolo</a
+        >
+        <a
+          class="bg-red-500 text-white px-3 py-2 font-bold z-1 hover:bg-red-600"
+          href="/pizzas"
+          >Le nostre pizze</a
+        >
+      </div>
+      <img
+        class="w-50/100 top-[-30px] right-0 absolute"
+        src="https://png.pngtree.com/png-clipart/20240806/original/pngtree-pizza-slice-hd-png-image_15718805.png"
+        alt="immagine pizza"
+      />
+      <img
+        class="w-50/100 top-30 left-0 absolute"
+        src="https://www.pizzasiaosta.com/wp-content/uploads/2023/08/pizza-slice.png"
+        alt="immagine pizza"
+      />
+    </main>
+  </body>
+</html>

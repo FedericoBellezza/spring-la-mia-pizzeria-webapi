@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INGREDIENTS</title>
+    <div th:replace="~{ fragments/fragments :: favicon}"></div>
+    <div th:replace="~{ fragments/fragments :: tailwind}"></div>
+  </head>
+  <body class="mb-30">
+    <div th:replace="~{ fragments/fragments :: navbar }"></div>
+
+    <!-- title -->
+    <h1
+      th:if="${edit}"
+      class="text-5xl text-slate-700 font-bold italic text-center pt-10 pb-10"
+    >
+      Modifica [[${ingredient.name}]]
+    </h1>
+    <h1
+      th:unless="${edit}"
+      class="text-5xl text-slate-700 font-bold italic text-center pt-10 pb-10"
+    >
+      Aggiungi ingrediente
+    </h1>
+
+    <!-- form -->
+    <form
+      id="ingredient-form"
+      th:action="${edit} ? @{/ingredients/edit/{id}(id = ${ingredient.id})} : @{/ingredients/create}"
+      th:object="${ingredient}"
+      method="post"
+      class="flex flex-col justify-center gap-3 w-2/3 mx-auto p-5"
+    >
+      <!-- name input -->
+      <div class="flex flex-col grow">
+        <label for="name">Nome</label>
+        <input
+          class="border ps-2 py-1 rounded"
+          type="text"
+          id="name"
+          th:field="*{name}"
+          th:errorClass="bg-red-200"
+        />
+        <!-- validazione -->
+        <div th:if="${#fields.hasErrors('name')}">
+          <div
+            class="italic text-slate-500"
+            th:each="error : ${#fields.errors('name')}"
+            th:text="${error}"
+          ></div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 py-3">
+        <a
+          th:href="@{/ingredients}"
+          th:text="Annulla"
+          class="bg-red-500 text-white px-2 py-1 grow hover:bg-red-600 rounded cursor-pointer text-center"
+        />
+        <input
+          type="submit"
+          th:value="${edit} ? 'Modifica ingrediente' : 'Aggiungi ingrediente'"
+          class="bg-blue-500 text-white px-2 py-1 grow-3 hover:bg-blue-600 rounded cursor-pointer text-center w"
+        />
+      </div>
+    </form>
+  </body>
+</html>

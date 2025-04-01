@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIZZAS</title>
+    <div th:replace="~{ fragments/fragments :: favicon}"></div>
+    <div th:replace="~{ fragments/fragments :: tailwind}"></div>
+  </head>
+  <body class="mb-30">
+    <div th:replace="~{ fragments/fragments :: navbar }"></div>
+    <h1
+      class="text-5xl text-slate-700 font-bold italic text-center pt-10 pb-10"
+    >
+      Aggiungi una pizza
+    </h1>
+    <form
+      th:action="@{/pizzas/create}"
+      th:object="${pizza}"
+      method="post"
+      class="flex flex-col justify-center gap-3 w-2/3 mx-auto p-5"
+    >
+      <div class="text-xl flex-col flex">
+        <h2 class="text-2xl font-bold italic mb-3">Ingredienti:</h2>
+        <div th:each="ingredient : ${ingredients}">
+          <input
+            th:field="${pizza.ingredients}"
+            th:value="${ingredient.id}"
+            th:id="${ingredient.id}"
+            class="w-5 h-5 text-blue-600 accent-blue-600"
+            type="checkbox"
+          />
+          <label for="${ingredient.id}" th:text="${ingredient}"></label>
+        </div>
+      </div>
+
+      <!-- nome e prezzo (input container) -->
+      <div class="flex sm:gap-5 grow flex-wrap">
+        <div class="flex flex-col grow">
+          <!-- name input -->
+          <label for="name">Nome</label>
+          <input
+            class="border ps-2 py-1"
+            type="text"
+            id="name"
+            th:field="*{name}"
+            th:errorClass="bg-red-200"
+            placeholder="Inserisci qui il tuo nome"
+          />
+          <!-- validazione -->
+          <div th:if="${#fields.hasErrors('name')}">
+            <div
+              class="italic text-slate-500"
+              th:each="error : ${#fields.errors('name')}"
+              th:text="${error}"
+            ></div>
+          </div>
+        </div>
+        <div class="flex flex-col grow">
+          <!-- price input -->
+          <label for="price">Prezzo</label>
+          <input
+            class="border ps-2 py-1"
+            type="number"
+            id="price"
+            th:field="*{price}"
+            th:errorClass="bg-red-200"
+            placeholder="Inserisci qui il prezzo"
+          />
+          <!-- validazione -->
+          <div th:if="${#fields.hasErrors('price')}">
+            <div
+              class="italic text-slate-500"
+              th:each="error : ${#fields.errors('price')}"
+              th:text="${error}"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <!-- descrizione input container -->
+      <div class="flex flex-col grow">
+        <label for="desciption">Descrizione</label>
+        <textarea
+          th:field="*{description}"
+          class="border px-2 py-1 h-24"
+          id="desciption"
+          th:errorClass="bg-red-200"
+          placeholder="Inserisci qui la descrizione della pizza"
+        ></textarea>
+        <!-- validazione -->
+        <div th:if="${#fields.hasErrors('description')}">
+          <div
+            class="italic text-slate-500"
+            th:each="error : ${#fields.errors('description')}"
+            th:text="${error}"
+          ></div>
+        </div>
+      </div>
+      <!-- Immagine input container -->
+      <div class="flex flex-col grow">
+        <label for="image">Immagine</label>
+        <input
+          class="border ps-2 py-1"
+          type="text"
+          id="image"
+          th:field="*{image}"
+          th:errorClass="bg-red-200"
+          placeholder="Inserisci qui il link all'immagine"
+        />
+        <!-- validazione -->
+        <div th:if="${#fields.hasErrors('image')}">
+          <div
+            class="italic text-slate-500"
+            th:each="error : ${#fields.errors('image')}"
+            th:text="${error}"
+          ></div>
+        </div>
+      </div>
+      <div class="flex gap-3 py-3">
+        <a
+          href="/pizzas/create"
+          th:text="Reset"
+          class="bg-red-500 text-white px-2 py-1 grow hover:bg-red-600 cursor-pointer text-center"
+        />
+        <input
+          type="submit"
+          value="Aggiungi pizza"
+          class="bg-blue-500 text-white px-2 py-1 grow-3 hover:bg-blue-600 cursor-pointer text-center w"
+        />
+      </div>
+    </form>
+  </body>
+</html>
