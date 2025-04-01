@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,6 +50,7 @@ public class Pizza {
 
   @ManyToMany
   @JoinTable(name = "ingredient_pizza", joinColumns = @JoinColumn(name = "pizza_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+  // @JsonManagedReference
   private List<Ingredient> ingredients;
 
   public Integer getId() {
